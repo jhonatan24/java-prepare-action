@@ -23,6 +23,12 @@ jobs:
       - name: Maven test
         run: mvn clean test --no-transfer-progress
 
+      - name: info
+        run: ls -la ${{ github.workspace }}/src
+
+      - name: datos
+        run: ls -la ${{ github.workspace }}/src/test
+
       - name: imprimir target
         run: ls -la ${{ github.workspace }}/target/surefire-reports
 
