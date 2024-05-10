@@ -42,6 +42,8 @@ runs:
       uses: whelk-io/maven-settings-xml-action@v22
       with:
          repositories: '[{ "id": "ghp", "url": "https://maven.pkg.github.com/*" }]'
+      shell: bash
+
     - name: Maven test
       shell: bash
       run: mvn clean test --no-transfer-progress
