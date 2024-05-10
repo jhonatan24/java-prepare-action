@@ -1,4 +1,4 @@
-name: java-prepare-action
+name: 'java-prepare-action'
 description: 'Get build project and test'
 inputs:
   javas-version:
