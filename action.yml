@@ -7,6 +7,9 @@ inputs:
   github-token:
     description: 'The GitHub token to upload the code coverage report'
     required: true
+  GPR_USERNAME:
+    description: ''
+    required: true
   update-coverage-comment:
     description: 'Update the coverage comment'
     required: false
@@ -37,12 +40,14 @@ runs:
 
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
+      with:
+         repositories: '[{ "id": "ghp", "url": "https://maven.pkg.github.com/*" }]'
 
     - name: Maven test
       shell: bash
       run: mvn clean test --no-transfer-progress
 
-    - name: Add coverage to PR
+    - name: Add coverages to PR
       id: jacoco
       uses: madrapps/jacoco-report@v1.6.1
       with:
