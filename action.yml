@@ -45,6 +45,7 @@ runs:
 
     - name: Maven test
       run: mvn clean test --no-transfer-progress
+      shell: bash
 
     - name: Add coverages to PR
       id: jacoco
