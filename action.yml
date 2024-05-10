@@ -9,7 +9,7 @@ inputs:
     required: true
   update-coverage-comment:
     description: 'Update the coverage comment'
-    required: true
+    required: false
     default: true
   block-pull-request:
     description: 'block pull request for not exceeding the minimum coverage percentage'

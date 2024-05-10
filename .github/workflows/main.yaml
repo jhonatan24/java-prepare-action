@@ -23,5 +23,5 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: fpa
         with:
-          java-version: '17'
+          javas-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
