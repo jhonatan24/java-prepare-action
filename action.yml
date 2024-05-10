@@ -38,7 +38,7 @@ runs:
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
       with:
-        servers: '[{ "id": "github-packages-compas", "username": "OWNER", "password": "${{ inputs.GITHUB_TOKEN }}" }]'
+        servers: '[{ "id": "github-packages-compas", "username": "jhonatan2465330@gmail.com", "password": "${{ inputs.github-token }}" }]'
 
     - name: Maven test
       shell: bash
