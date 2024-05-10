@@ -42,7 +42,7 @@ runs:
       shell: bash
       run: mvn clean test --no-transfer-progress
 
-    - name: Add coverage to PR
+    - name: Add coverages to PR
       id: jacoco
       uses: madrapps/jacoco-report@v1.6.1
       with:
