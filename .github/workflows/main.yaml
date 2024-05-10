@@ -27,7 +27,7 @@ jobs:
         run: ls -la ${{ github.workspace }}/src
 
       - name: datos
-        run: ls -la ${{ github.workspace }}/src/test
+        run: ls -la ${{ github.workspace }}/src/test/java/com/action/github
 
       - name: imprimir target
         run: ls -la ${{ github.workspace }}/target/surefire-reports
