@@ -21,7 +21,7 @@ jobs:
           repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
 
       - name: Maven test
-        run: mvn clean test --no-transfer-progress
+        run: mvn clean test
 
       - name: Add coverages to PR
         id: jacoco
