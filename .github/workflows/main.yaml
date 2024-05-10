@@ -21,7 +21,10 @@ jobs:
           repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
 
       - name: Maven test
-        run: mvn clean test
+        run: mvn clean test --no-transfer-progress
+
+      - name: imprimir target
+        run: ls -la ${{ github.workspace }}/**/target/surefire-reports
 
       - name: Add coverages to PR
         id: jacoco
