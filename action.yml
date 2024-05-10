@@ -41,7 +41,7 @@ runs:
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
       with:
-         repositories: '[{ "id": "ghp", "url": "https://maven.pkg.github.com/*" }]'
+         repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
 
     - name: Maven test
       run: mvn clean test --no-transfer-progress
