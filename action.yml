@@ -41,9 +41,6 @@ jobs:
 
       - name: Set maven settings
         uses: whelk-io/maven-settings-xml-action@v22
-        with:
-          repositories: '[{ "id": "ghp-ueno", "url": "https://maven.pkg.github.com/ueno-tecnologia-org/*" }]'
-          servers: '[{ "id": "ghp-ueno", "username": "${{ secrets.GPR_USERNAME }}", "password": "${{ secrets.GPR_TOKEN }}" }]'
 
       - name: Maven test
         run: mvn clean test --no-transfer-progress
