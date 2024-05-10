@@ -19,7 +19,7 @@ jobs:
             echo "GITHUB_TOKEN is not empty"
           fi
         shell: bash
-      - name: Executes flutter-prepare-action
+      - name: Executes java-prepare-action
         uses: ./ # Uses an action in the root directory
         id: fpa
         with:

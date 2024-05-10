@@ -1,7 +1,7 @@
 name: java-prepare-action
 description: 'Get build project and test'
 inputs:
-  java-version:
+  javas-version:
     description: 'java version'
     required: true
   github-token:
@@ -36,7 +36,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ inputs.java-version }}
+          java-version: ${{ inputs.javas-version }}
           distribution: 'corretto'
 
       - name: Set maven settings
