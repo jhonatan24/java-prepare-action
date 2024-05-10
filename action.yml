@@ -23,3 +23,32 @@ inputs:
     description: 'minimum percentage required for file'
     required: false
     default: 50
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: ${{ inputs.javas-version }}
+        distribution: 'corretto'
+
+    - name: Set maven settings
+      uses: whelk-io/maven-settings-xml-action@v22
+
+    - name: Maven test
+      run: mvn clean test --no-transfer-progress
+
+    - name: Add coverage to PR
+      id: jacoco
+      uses: madrapps/jacoco-report@v1.6.1
+      with:
+        paths: |
+          ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
+        token: ${{ inputs.github-token }}
+        min-coverage-overall: ${{inputs.block-pull-request-min-coverage-global}}
+        min-coverage-changed-files: ${{inputs.block-pull-request-min-coverage-file}}
+        title: Code coverage
+        update-comment: ${{inputs.update-coverage-comment}}
