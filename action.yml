@@ -7,6 +7,9 @@ inputs:
   github-token:
     description: 'The GitHub token to upload the code coverage report'
     required: true
+  GPR_USERNAME:
+    description: ''
+    required: true
   update-coverage-comment:
     description: 'Update the coverage comment'
     required: false
@@ -38,7 +41,8 @@ runs:
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
       with:
-        servers: '[{ "id": "github-packages-compas", "username": "jhonatan2465330@gmail.com", "password": "${{ inputs.github-token }}" }]'
+         repositories: '[{ "id": "ghp", "url": "https://maven.pkg.github.com/*" }]'
+         servers: '[{ "id": "ghp", "username": "${{ inputs.GPR_USERNAME }}", "password": "${{ inputs.github-token }}" }]'
 
     - name: Maven test
       shell: bash

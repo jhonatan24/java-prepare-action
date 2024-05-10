@@ -25,3 +25,4 @@ jobs:
         with:
           javas-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
