@@ -6,23 +6,31 @@ jobs:
     runs-on: ubuntu-latest
     name: checks
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Check if GITHUB_TOKEN is empty
-        run: |
-          if [[ -z "${{ secrets.GITHUB_TOKEN }}" ]]; then
-            echo "GITHUB_TOKEN is empty"
-            exit 1
-          else
-            echo "GITHUB_TOKEN is not empty"
-          fi
-        shell: bash
-      - name: Executes java-prepare-action
-        uses: ./ # Uses an action in the root directory
-        id: fpa
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          javas-version: '17'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
+          java-version: ${{ inputs.javas-version }}
+          distribution: 'corretto'
+
+      - name: Set maven settings
+        uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
+
+      - name: Maven test
+        run: mvn clean test --no-transfer-progress
+
+      - name: Add coverages to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 30
+          min-coverage-changed-files: 50
+          title: Code coverage
+          update-comment: true
