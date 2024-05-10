@@ -37,6 +37,12 @@ runs:
 
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
+      with:
+        repositories: '[
+                        { "id": "spring-milestone", "url": "https://repo.spring.io/milestone/"},
+                        { "id": "oss-sonatype", "url": "https://oss.sonatype.org/service/local/repositories/releases/content/"}
+                      ]'
+        plugin_repositories: '[{ "id": "spring-milestone", "url": "https://repo.spring.io/milestone/"}]'
 
     - name: Maven test
       shell: bash
