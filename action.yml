@@ -1,0 +1,68 @@
+name: java-prepare-action
+description: 'Get build project and test'
+inputs:
+  java-version:
+    description: 'java version'
+    required: true
+  github-token:
+    description: 'The GitHub token to upload the code coverage report'
+    required: true
+  update-coverage-comment:
+    description: 'Update the coverage comment'
+    required: true
+    default: true
+  block-pull-request:
+    description: 'block pull request for not exceeding the minimum coverage percentage'
+    required: false
+    default: false
+  block-pull-request-min-coverage-global:
+    description: 'minimum percentage required'
+    required: false
+    default: 40.0
+  block-pull-request-min-coverage-file:
+    description: 'minimum percentage required for file'
+    required: false
+    default: 50.0
+
+on:
+  pull_request:
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: 'corretto'
+
+      - name: Set maven settings
+        uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          repositories: '[{ "id": "ghp-ueno", "url": "https://maven.pkg.github.com/ueno-tecnologia-org/*" }]'
+          servers: '[{ "id": "ghp-ueno", "username": "${{ secrets.GPR_USERNAME }}", "password": "${{ secrets.GPR_TOKEN }}" }]'
+
+      - name: Maven test
+        run: mvn clean test --no-transfer-progress
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: |
+            ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
+          token: ${{ inputs.github-token }}
+          min-coverage-overall: ${{inputs.block-pull-request-min-coverage-global}}
+          min-coverage-changed-files:  ${{inputs.block-pull-request-min-coverage-file}}
+          title: Code coverage
+          update-comment: ${{inputs.update-coverage-comment}}
+
+      - name: Fail PR if overall coverage is low
+        if: ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('Overall coverage is less than 60%!')
