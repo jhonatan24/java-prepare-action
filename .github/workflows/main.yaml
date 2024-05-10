@@ -24,7 +24,7 @@ jobs:
         run: mvn clean test --no-transfer-progress
 
       - name: info
-        run: ls -la ${{ github.workspace }}/src
+        run: mvn -version
 
       - name: datos
         run: ls -la ${{ github.workspace }}/src/test/java/com/action/github
