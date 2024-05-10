@@ -12,7 +12,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ inputs.javas-version }}
+          java-version: '17'
           distribution: 'corretto'
 
       - name: Set maven settings
