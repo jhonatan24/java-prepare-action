@@ -66,10 +66,6 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
-						<configuration>
-							<dataFile>target/jacoco.exec</dataFile>
-							<outputDirectory>target/report</outputDirectory>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
