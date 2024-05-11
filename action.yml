@@ -59,8 +59,8 @@ runs:
         title: Code coverage
         update-comment: ${{inputs.update-coverage-comment}}
 
-    - name: flag
-      run: ${{steps.jacoco.outputs.coverage-overall}}
+    - name:  variable
+      run: echo ${{steps.jacoco.outputs.coverage-overall}}
       shell: bash
 
     - name: flag
