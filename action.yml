@@ -41,11 +41,11 @@ runs:
     - name: Set maven settings
       uses: whelk-io/maven-settings-xml-action@v22
       with:
-         repositories: '[{ "id": "ghp", "url": "https://maven.pkg.github.com/*" }]'
+         repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
 
     - name: Maven test
-      shell: bash
       run: mvn clean test --no-transfer-progress
+      shell: bash
 
     - name: Add coverages to PR
       id: jacoco
@@ -58,3 +58,19 @@ runs:
         min-coverage-changed-files: ${{inputs.block-pull-request-min-coverage-file}}
         title: Code coverage
         update-comment: ${{inputs.update-coverage-comment}}
+
+    - name:  variable
+      run: echo ${{steps.jacoco.outputs.coverage-overall}}
+      shell: bash
+
+    - name: flag
+      run: echo ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
+      shell: bash
+
+    - name: Fail PR if overall coverage is low
+      if: ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
+      shell: bash
+      run: |
+        exit 1
+      
+        

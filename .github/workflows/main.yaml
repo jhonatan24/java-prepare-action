@@ -6,8 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     name: checks
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check if GITHUB_TOKEN is empty
@@ -25,4 +23,5 @@ jobs:
         with:
           javas-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
+          block-pull-request-min-coverage-global: 60
+          block-pull-request: true
