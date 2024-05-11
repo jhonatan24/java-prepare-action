@@ -8,38 +8,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Check if GITHUB_TOKEN is empty
+        run: |
+          if [[ -z "${{ secrets.GITHUB_TOKEN }}" ]]; then
+            echo "GITHUB_TOKEN is empty"
+            exit 1
+          else
+            echo "GITHUB_TOKEN is not empty"
+          fi
+        shell: bash
+      - name: Executes java-prepare-action
+        uses: ./ # Uses an action in the root directory
+        id: fpa
         with:
-          java-version: '17'
-          distribution: 'corretto'
-
-      - name: Set maven settings
-        uses: whelk-io/maven-settings-xml-action@v22
-        with:
-          repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
-
-      - name: Maven test
-        run: mvn clean test --no-transfer-progress
-
-      - name: info
-        run: mvn -version
-
-      - name: datos
-        run: ls -la ${{ github.workspace }}/src/test/java/com/action/github
-
-      - name: imprimir target
-        run: ls -la ${{ github.workspace }}/target/surefire-reports
-
-      - name: Add coverages to PR
-        id: jacoco
-        uses: madrapps/jacoco-report@v1.6.1
-        with:
-          paths: |
-            ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 30
-          min-coverage-changed-files: 50
-          title: Code coverage
-          update-comment: true
+          javas-version: '17'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
