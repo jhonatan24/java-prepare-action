@@ -59,6 +59,14 @@ runs:
         title: Code coverage
         update-comment: ${{inputs.update-coverage-comment}}
 
+    - name: flag
+      run: ${{steps.jacoco.outputs.coverage-overall}}
+      shell: bash
+
+    - name: flag
+      run: echo ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
+      shell: bash
+
     - name: Fail PR if overall coverage is low
       if: ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
       uses: actions/github-script@v6
