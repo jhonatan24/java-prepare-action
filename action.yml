@@ -69,8 +69,9 @@ runs:
 
     - name: Fail PR if overall coverage is low
       if: ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
-      shell: bash
-      run: |
-        exit 1
+      uses: actions/github-script@v6
+      with:
+        script: |
+          core.setFailed('Overall coverage is less than 60%!')
       
         
