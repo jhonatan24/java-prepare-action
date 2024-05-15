@@ -26,6 +26,3 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           block-pull-request-min-coverage-global: 60
           block-pull-request: true
-      - name: fallo
-        run: |
-          exit 1
