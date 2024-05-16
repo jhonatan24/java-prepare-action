@@ -26,6 +26,10 @@ inputs:
     description: 'minimum percentage required for file'
     required: false
     default: 50
+  sonar_token:
+    description: ''
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -38,14 +42,30 @@ runs:
         java-version: ${{ inputs.javas-version }}
         distribution: 'corretto'
 
-    - name: Set maven settings
-      uses: whelk-io/maven-settings-xml-action@v22
-      with:
-         repositories: '[{ "id": "central", "url": "https://repo.maven.apache.org/maven2/" }]'
-
-    - name: Maven test
-      run: mvn clean test --no-transfer-progress
+    - name: variable
+      run: echo ${{ runner.os }}
       shell: bash
+
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and analyze
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}  # Needed to get PR information, if any
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jhonatan-barreto-ueno_kyc-core
+      shell: bash
+
 
     - name: Add coverages to PR
       id: jacoco
@@ -58,14 +78,6 @@ runs:
         min-coverage-changed-files: ${{inputs.block-pull-request-min-coverage-file}}
         title: Code coverage
         update-comment: ${{inputs.update-coverage-comment}}
-
-    - name:  variable
-      run: echo ${{steps.jacoco.outputs.coverage-overall}}
-      shell: bash
-
-    - name: flag
-      run: echo ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
-      shell: bash
 
     - name: Fail PR if overall coverage is low
       if: ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
