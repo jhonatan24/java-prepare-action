@@ -24,4 +24,5 @@ jobs:
         with:
           javas-version: '17'
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
           block-pull-request: true

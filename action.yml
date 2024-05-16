@@ -26,6 +26,10 @@ inputs:
     description: 'minimum percentage required for file'
     required: false
     default: 50
+  sonar_token:
+    description: ''
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -59,12 +63,25 @@ runs:
         title: Code coverage
         update-comment: ${{inputs.update-coverage-comment}}
 
-    - name:  variable
-      run: echo ${{steps.jacoco.outputs.coverage-overall}}
-      shell: bash
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
 
-    - name: flag
-      run: echo ${{ inputs.block-pull-request && steps.jacoco.outputs.coverage-overall < inputs.block-pull-request-min-coverage-global }}
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and analyze
+      env:
+          GITHUB_TOKEN: ${{ inputs.github-token }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ inputs.sonar_token }}
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jhonatan-barreto-ueno_kyc-core
       shell: bash
 
     - name: Fail PR if overall coverage is low
