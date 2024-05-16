@@ -63,7 +63,6 @@ runs:
     - name: Build and analyze
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}  # Needed to get PR information, if any
-        SONAR_TOKEN: ${{ inputs.sonar_token }}
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jhonatan-barreto-ueno_kyc-core
       shell: bash
 
